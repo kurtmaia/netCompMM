@@ -575,3 +575,46 @@ weighted_m_matrix <- function(x) {
   wm <- llply(x, function(xx) xx*(1/nrow(xx)))
   return(add(wm))
 }
+
+
+
+plotBlockmodel <- function(x, melted = FALSE) {
+  if(melted) {
+    probMat <- x
+  } else {
+    dimnames(x) <- list(Var1 = 1:nrow(x), Var2 = 1:ncol(x))
+    probMat <- melt(x)
+  }
+  p <- ggplot(probMat, aes(x=Var1,y=Var2*(-1), fill= value )) + geom_tile() + geom_text(aes(label = round(value, 3))) + scale_fill_gradient(low = "white", high = "red",limits = c(0,1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),legend.position="none",panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),panel.grid.minor=element_blank(),plot.background=element_blank())
+  return(p)
+}
+
+get_estimate_an <- function(K,xn,An) {
+  xn <- factor(xn, levels = 1:K)
+  x <- xn %>% gen_design_matrix
+  An_collapsed <- t(x)%*%(An*lower.tri(An))%*%x
+  An_collapsed <- An_collapsed+t(An_collapsed)
+  diag(An_collapsed) <- diag(An_collapsed)/2
+  mm <- xtabs(~xn,drop.unused = FALSE)
+  N <- mm%*%t(mm)
+  diag(N) <- choose(mm,2)
+  theta_k <- An_collapsed/N
+  theta_k <-( theta_k + t(theta_k))/2
+  theta_k[is.nan(theta_k)] <- 0
+  return(theta_k)
+}
+
+gen_design_matrix <- function(x){
+  if (class(x)=='factor'){
+  n_levels <- max(levels(x) %>% as.numeric)
+} else {
+  n_levels <- max(unique(x))
+}
+  mat <- matrix(0,nrow = length(x),ncol = n_levels)
+  for (i in 1:length(x)){
+    mat[i,x[i]] <- 1
+  }
+  return(mat)
+}
+
+
