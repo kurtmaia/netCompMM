@@ -578,14 +578,15 @@ weighted_m_matrix <- function(x) {
 
 
 
-plotBlockmodel <- function(x, melted = FALSE) {
+plotBlockmodel <- function(x, melted = FALSE, label = TRUE) {
   if(melted) {
     probMat <- x
   } else {
     dimnames(x) <- list(Var1 = 1:nrow(x), Var2 = 1:ncol(x))
     probMat <- melt(x)
   }
-  p <- ggplot(probMat, aes(x=Var1,y=Var2*(-1), fill= value )) + geom_tile() + geom_text(aes(label = round(value, 3))) + scale_fill_gradient(low = "white", high = "red",limits = c(0,1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),legend.position="none",panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),panel.grid.minor=element_blank(),plot.background=element_blank())
+  p <- ggplot(probMat, aes(x=Var1,y=Var2*(-1), fill= value )) + geom_tile() + scale_fill_gradient(low = "white", high = "red",limits = c(0,1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks=element_blank(),axis.title.x=element_blank(),axis.title.y=element_blank(),legend.position="none",panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),panel.grid.minor=element_blank(),plot.background=element_blank())
+  if (label) p <- p + geom_text(aes(label = round(value, 3)))
   return(p)
 }
 
