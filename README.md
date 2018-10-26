@@ -30,8 +30,8 @@ source("generateSyntheticData.R")
 source("generateSyntheticData.R")
 
 mm <- netCompMM(graphs, side, family = "binom", link = "logit", 
-					heterogenity = TRUE, threshold = NULL, matrix.plot = TRUE, 
-					R =15, H = 12, Tsamples = 1500, burnIn = 500, by.print = 15, nCores = 8)	
+	heterogenity = TRUE, threshold = NULL, matrix.plot = TRUE, 
+	R =15, H = 12, Tsamples = 1500, burnIn = 500, by.print = 15, nCores = 8)	
 
 ```
 ## Reference
