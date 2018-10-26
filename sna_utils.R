@@ -1,6 +1,11 @@
 packages <-  c("stringr","MASS" ,"reshape2" ,"plyr" ,"tm" ,"gtools" ,"ggplot2","gtools","doMC","VGAM")
-# ins <- lapply(packages,install.packages)
-# rm(ins)
+
+for (pkg in packages){
+  if(!(pkg %in% rownames(installed.packages()))){
+    install.packages(pkg)
+  }
+}
+
 req <- lapply(packages, require, character.only = TRUE)
 rm(req)
 
